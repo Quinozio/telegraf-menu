@@ -282,6 +282,9 @@ export abstract class GenericMenu<
 
         const buttons = filters.map((row) => {
             return row.map((button) => {
+                if (button.url) {
+                    return Markup.button.url(this.formatButtonLabel(ctx, button), button.url);
+                }
                 const shortButton = GenericMenu.remapFullToCompact({
                     action: this.genericConfig.action,
                     value: button.value,

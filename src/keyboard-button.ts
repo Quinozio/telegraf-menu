@@ -4,6 +4,7 @@ export class KeyboardButton<TValue extends string = string> {
     constructor(
         public label: string,
         public value: TValue,
+        public url?: string,
         isDefault?: boolean,
     ) {
         if (isDefault) {
