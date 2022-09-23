@@ -126,7 +126,13 @@ export abstract class GenericMenu<
         ctx.telegram.sendChatAction(chatId, 'typing');
 
         const sendMessage = async () => {
-            const sentMessage = await ctx.reply(this.getMessage(ctx), this.getKeyboard(ctx));
+            let sentMessage;
+            if(this.genericConfig.customMessage && this.genericConfig.customMessage.type === 'image'){
+                sentMessage = await ctx.replyWithPhoto({url: this.genericConfig.customMessage.content}, this.getKeyboard(ctx));
+            }
+            else{
+                sentMessage = await ctx.reply(this.getMessage(ctx), this.getKeyboard(ctx));
+            }
             this.messageId = sentMessage.message_id;
         };
 
@@ -139,15 +145,20 @@ export abstract class GenericMenu<
         }
 
         if (isReplacingMenu && oldMenu.onAction) {
-            this.messageId = oldMenu.messageId;
+            if(this.genericConfig.customMessage || oldMenu.getMessage(ctx) === ""){
+                ctx.deleteMessage(oldMenu.messageId).then(async()=>{
+                    await sendMessage();
+                });
+            }
+            else{
+                this.messageId = oldMenu.messageId;
                 ctx.telegram.editMessageText(
                     chatId,
                     this.messageId,
                     null,
                     this.getMessage(ctx),
                     this.getKeyboard(ctx),
-                )
-                .then(() => {
+                ).then(() => {
                     if (this.genericConfig.debug) {
                         console.log('sendMenu', this.genericConfig.action);
                     }
@@ -156,6 +167,7 @@ export abstract class GenericMenu<
                     oldMenu.deleted = true;
                     await sendMessage();
                 });
+            }
         } else {
             ctx.deleteMessage(this.messageId).catch(() => {});
             await sendMessage();
@@ -200,7 +212,7 @@ export abstract class GenericMenu<
     }
 
     private getMessage(ctx: TCtx) {
-        const message = ctx.i18n?.t(this.genericConfig.message) || this.genericConfig.message;
+        const message = ctx.i18n?.t(this.genericConfig.message as string) || this.genericConfig.message;
         return message + this.debugMessage;
     }
 
@@ -269,7 +281,7 @@ export abstract class GenericMenu<
                         console.log(e);
                     });
             }
-        });
+        }, 500);
     }
 
     /**

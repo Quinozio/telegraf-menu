@@ -12,6 +12,8 @@ export interface MenuFormatting {
 }
 
 export type GenericState = string[] | string | Record<any, any>;
+
+export type MessageType = 'message' | 'image';
 export interface GenericConfig<
     TCtx extends DefaultCtx = DefaultCtx,
     TState extends GenericState = GenericState,
@@ -19,6 +21,7 @@ export interface GenericConfig<
     TValue extends string = string,
 > {
     action: string;
+    customMessage?: {type: MessageType, content: string}
     message: string;
     submitMessage?: string;
     filters: MenuFilters<TValue> | MenuFilters<TValue>[];
