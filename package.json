@@ -1,6 +1,6 @@
 {
   "name": "@quino/telegraf-menu",
-  "version": "1.7.4",
+  "version": "1.7.7",
   "author": "Dmytro Vakulenko",
   "license": "MIT",
   "description": "State-based Telegraf menus (Radio, Checkbox, Range) written with TypeScript",
