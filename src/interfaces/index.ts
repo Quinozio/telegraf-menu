@@ -1,5 +1,6 @@
 import { I18n, I18nContext, TemplateData } from '@edjopato/telegraf-i18n';
 import { Context, NarrowedContext } from 'telegraf';
+import { InputFile } from 'telegraf/typings/core/types/typegram';
 
 import { GenericMenu } from '../generic-menu';
 import { KeyboardButton } from '../keyboard-button';
@@ -21,7 +22,7 @@ export interface GenericConfig<
     TValue extends string = string,
 > {
     action: string;
-    customMessage?: {type: MessageType, content: string}
+    customMessage?: {type: MessageType, content: string | InputFile}
     message: string;
     submitMessage?: string;
     filters: MenuFilters<TValue> | MenuFilters<TValue>[];
